@@ -139,6 +139,7 @@ export {
   TEXTBOOK_HOME,
   TRANSLATIONS,
   UNIVERSAL_NOTATIONS,
+  toc,
   findNextSection,
   findPrevSection,
   getSectionIndex,
