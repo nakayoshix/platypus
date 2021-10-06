@@ -9,7 +9,7 @@ import { getCourse } from '@mathigon/studio/server/utilities'
 
 import { LOCALES, translate } from '@mathigon/studio/server/i18n'
 import {
-  CONFIG, NOTATIONS, TEXTBOOK_HOME, TRANSLATIONS, UNIVERSAL_NOTATIONS, toc,
+  CONFIG, NOTATIONS, TEXTBOOK_HOME, TRANSLATIONS, UNIVERSAL_NOTATIONS, TOC,
   findNextSection, findPrevSection, getSectionIndex, isLearningPath, updateGlossary
 } from './utilities'
 import * as storageApi from './storage'
@@ -81,7 +81,7 @@ new MathigonStudioApp()
     }
 
     res.render('userAccount', {
-      tocJSON: JSON.stringify(toc),
+      tocJSON: JSON.stringify(TOC),
       config: CONFIG,
       userData: userMockData,
       lang,
