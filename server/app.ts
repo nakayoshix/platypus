@@ -9,9 +9,11 @@ import { getCourse } from '@mathigon/studio/server/utilities'
 
 import { LOCALES, translate } from '@mathigon/studio/server/i18n'
 import {
-  CONFIG, NOTATIONS, TEXTBOOK_HOME, TRANSLATIONS, UNIVERSAL_NOTATIONS, TOC,
-  findNextSection, findPrevSection, getSectionIndex, isLearningPath, updateGlossary
+  CONFIG, NOTATIONS, TEXTBOOK_HOME, TRANSLATIONS, UNIVERSAL_NOTATIONS,
+  findNextSection, findPrevSection, getSectionIndex, isLearningPath,
+  updateGlossary, tocFilterByType
 } from './utilities'
+import { TocCourse } from './interfaces'
 import * as storageApi from './storage'
 
 const getCourseData = async function (req: Request) {
@@ -65,11 +67,26 @@ new MathigonStudioApp()
     const translations = TRANSLATIONS[req.params.locale || 'en'] || {}
     res.json(translations)
   })
+  .get('/courseList', async (req, res) => {
+    res.json(tocFilterByType())
+  })
+  .get('/courseList/:type', async (req, res) => {
+    let type = req.params.type || ''
+    if (type === 'none') {
+      type = ''
+    }
+    const courses: TocCourse[] = tocFilterByType(type)
+    res.json(courses)
+  })
   .use(async (req, res, next) => {
     res.locals.availableLocales = CONFIG.locales.map((l) => {
       return LOCALES[l]
     })
     next()
+  })
+  .get('/locales/:locale', async (req, res) => {
+    const translations = TRANSLATIONS[req.params.locale || 'en'] || {}
+    res.json(translations)
   })
   .get('/account', (req, res) => {
     const lang = req.locale.id || 'en'
@@ -81,7 +98,6 @@ new MathigonStudioApp()
     }
 
     res.render('userAccount', {
-      tocJSON: JSON.stringify(TOC),
       config: CONFIG,
       userData: userMockData,
       lang,
